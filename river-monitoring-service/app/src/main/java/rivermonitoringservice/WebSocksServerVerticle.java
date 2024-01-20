@@ -23,7 +23,7 @@ class WebSocksServerVerticle extends AbstractVerticle {
             ctx.textMessageHandler((msg) -> {
                 System.out.println("Server " + msg);
                 JsonObject item = new JsonObject();
-                String type = "rilevationData";
+                String type = "RILEVATION";
                 long time = i;
                 double waterLevel = i;
                 i++;

@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to top left, #28b487, #7dd56f);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 2rem 4rem;
+}
+
+h1 {
+    font-family: 'Montserrat', cursive;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+#submitBtn {
+    display: inline-block;
+    padding: 1rem 2rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.5s;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    background-color: lightgray;
+    margin-right: 1rem;
+}
+
+#submitBtn:hover {
+    background-color: #a6a6a6;
+}
+
+.chart-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70vw;
+    height: auto;
+    margin: 1rem 0;
+}
+
+.valveOptions {
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+#slider {
+    width:30%;
+    margin: 0 2rem;
+}
+
+#status {
+    margin-bottom: 1rem;
+}

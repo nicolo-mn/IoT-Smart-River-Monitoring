@@ -1,17 +1,25 @@
 'use strict';
+const RILEVATION = 'RILEVATION';
+const MODE_CHANGED = 'MODE';
+const MANUAL_MODE = 'MANUAL';
+const HIGH_WATER_LEVEL_MODE = 'HIGH_WATER_LEVEL';
+const FREE_MODE = 'FREE';
+const N_MIN = 0.5;
 const retryDelay = 5000;
 let exampleSocket;
 let dataList;
-const RILEVATION = 'rilevationData';
-const MODE_CHANGED = 'MODE';
-const N_MIN = 0.5;
 let isManualMode = false;
 let myLineChart;
 
 function connectWebSocket() {
     console.log("FUNZIONE WEB SOCKET CONNECT");
     exampleSocket = new WebSocket("ws://localhost:8080");
-    dataList = [];
+    dataList = [
+        {time: 0, waterLevel: 0},
+        {time: 1, waterLevel: 1},
+        {time: 2, waterLevel: 2},
+        {time: 1, waterLevel: 1},
+    ];
     graphInit();
     
     exampleSocket.onmessage = (event) => {
@@ -71,6 +79,9 @@ function graphInit() {
                 borderWidth: 1
             }]
         },
+        options: {
+            responsive: true // Enables responsiveness
+        }
     });
 }
 

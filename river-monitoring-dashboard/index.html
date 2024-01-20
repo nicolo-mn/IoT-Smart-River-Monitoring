@@ -3,13 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Dashboard</title>
 </head>
 <body>
-    <canvas id="myLineChart"></canvas>
-    <input type="range" id="slider" min="0" max="100" value="50">
-    <button id="submitBtn" onclick="submitCanvas()">Submit</button>
-    <p id="status"></p>
+    <div class="container">
+        <h1>Smart River Management Dashboard</h1>
+        <section class="chart-wrapper">
+            <canvas id="myLineChart"></canvas>
+        </section>
+        <p id="status">Stato del livello acquifero:</p>
+        <section class="valveOptions">
+            <label for="slider">Imposta apertura valvola:</label>
+            <input type="range" id="slider" min="0" max="100" value="50">
+            <button id="submitBtn">Imposta apertura</button>
+            <p id="alert"></p>
+        </section>
+    </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="websocket.js" type="text/javascript""></script>
