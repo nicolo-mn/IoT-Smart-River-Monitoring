@@ -14,12 +14,7 @@ let myLineChart;
 function connectWebSocket() {
     console.log("FUNZIONE WEB SOCKET CONNECT");
     exampleSocket = new WebSocket("ws://localhost:8080");
-    dataList = [
-        {time: 0, waterLevel: 0},
-        {time: 1, waterLevel: 1},
-        {time: 2, waterLevel: 2},
-        {time: 1, waterLevel: 1},
-    ];
+    dataList = [];
     graphInit();
     
     exampleSocket.onmessage = (event) => {
