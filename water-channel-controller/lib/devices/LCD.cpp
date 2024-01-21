@@ -53,8 +53,13 @@ void LCD::setValveTo(int percentage)
 {
     if (this->percentage == percentage) {
         return;
+    } else if (percentage < 0) {
+        percentage = 0;
+    } else if (percentage > 100) {
+        percentage = 100;
+    } else {
+        this->percentage = percentage;
     }
-    this->percentage = percentage;
     updateDisplay();
 }
 
