@@ -44,7 +44,11 @@ void LCD::setManual()
 
 void LCD::setValveTo(int percentage)
 {
+    if (this->percentage == percentage) {
+        return;
+    }
     displayLcd->clear();
     displayLcd->setCursor(0, FIRST_MSG_LINE);
     displayLcd->print("Valve set to " + String(percentage) + "%");
+    this->percentage = percentage;
 }
