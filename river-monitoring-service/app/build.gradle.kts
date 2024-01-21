@@ -21,6 +21,7 @@ dependencies {
     implementation("io.vertx:vertx-web:4.2.6")
     implementation("io.vertx:vertx-web-client:4.2.6")
     implementation("io.vertx:vertx-mqtt:4.2.6")
+    implementation("io.github.java-native:jssc:2.9.4")
 
     /* for logging */
     implementation("org.slf4j:slf4j-api:1.7.25")
@@ -30,7 +31,6 @@ dependencies {
 
     // This dependency is used by the application.
     implementation("com.google.guava:guava:31.1-jre")
-    implementation("io.github.java-native:jssc:2.9.4")
 
 }
 
