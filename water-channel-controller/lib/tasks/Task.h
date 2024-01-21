@@ -13,10 +13,6 @@ private:
     unsigned long timeElapsed;
 
 public:
-    Task(FlagManager *flagManager)
-    {
-        this->flagManager = flagManager;
-    }
 
     virtual void init(unsigned long period)
     {

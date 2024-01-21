@@ -33,18 +33,15 @@ void setup()
 
 void loop()
 {
-    // sched->schedule();
-    // displayLcd->setValveTo(0);
-    // delay(2000);
-    // displayLcd->setValveTo(100);
-    // delay(2000);
-    // displayLcd->setAutomatic();
-    // delay(2000);
+    sched->schedule();
     // displayLcd->setManual();
-    // delay(2000);
-    float perc = pot->getPercentage();
-    Serial.println(perc);
-    servo->setValveTo(perc);
-    displayLcd->setValveTo(perc);
-    delay(2000);
+    // delay(1000);
+    // displayLcd->setAutomatic();
+    // delay(1000);
+    // displayLcd->setValveTo(50);
+    // delay(1000);
+    // displayLcd->setValveTo(100);
+    // delay(1000);
+    // displayLcd->setValveTo(0);
+    // delay(1000);
 }

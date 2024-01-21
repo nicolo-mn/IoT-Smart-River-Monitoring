@@ -4,11 +4,12 @@
 class FlagManager
 {
 private:
-    
+    bool isAutomatic;
 
 public:
     FlagManager();
-
+    bool getIsAutomatic();
+    void setIsAutomatic(bool isAutomatic);
 };
 
 #endif
