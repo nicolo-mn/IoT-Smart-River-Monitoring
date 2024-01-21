@@ -30,6 +30,8 @@ dependencies {
 
     // This dependency is used by the application.
     implementation("com.google.guava:guava:31.1-jre")
+    implementation("io.github.java-native:jssc:2.9.4")
+
 }
 
 application {
