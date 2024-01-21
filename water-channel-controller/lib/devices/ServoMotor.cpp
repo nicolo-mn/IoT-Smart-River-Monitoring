@@ -3,15 +3,9 @@
 ServoMotor::ServoMotor(int pin)
 {
     servo.attach(pin);
-    closeGate();
 }
 
-void ServoMotor::openGate()
+void ServoMotor::setValveTo(int percentage)
 {
-    servo.write(OPEN_DEGREES);
-}
-
-void ServoMotor::closeGate()
-{
-    servo.write(CLOSED_DEGREES);
+    servo.write(percentage * OPEN_DEGREES / 100.0);
 }

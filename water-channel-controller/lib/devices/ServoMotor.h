@@ -3,8 +3,8 @@
 
 #include <Servo.h>
 
-#define OPEN_DEGREES 0
-#define CLOSED_DEGREES 90
+#define OPEN_DEGREES 180
+#define CLOSED_DEGREES 0
 
 class ServoMotor
 {
@@ -13,8 +13,7 @@ private:
 
 public:
     ServoMotor(int pin);
-    void openGate();
-    void closeGate();
+    void setValveTo(int percentage);
 };
 
 #endif

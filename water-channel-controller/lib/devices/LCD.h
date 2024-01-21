@@ -7,20 +7,15 @@ class LCD
 {
 private:
     LiquidCrystal_I2C *displayLcd;
-    void showOneLineMessage(String message);
-    void showTwoLinesMessage(String firstLine, String secondLine);
+    int percentage;
 
 public:
     LCD();
     void turnDisplayOn();
     void turnDisplayOff();
-    void showWelcomeMessage();
-    void showEnteringMessage();
-    void showReadyToWashMessage();
-    void updateProgressBar(unsigned long count);
-    void showWashingMessage();
-    void showWashingCompleteMessage();
-    void showErrorMessage();
+    void setAutomatic();
+    void setManual();
+    void setValveTo(int percentage);
 };
 
 #endif

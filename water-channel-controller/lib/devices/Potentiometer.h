@@ -8,7 +8,7 @@ private:
  
 public: 
   Potentiometer(int pin); 
-  float getValue();
+  float getPercentage();
 };
 
 #endif
