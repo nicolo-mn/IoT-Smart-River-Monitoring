@@ -17,7 +17,8 @@ void ManageValveTask::tick()
     switch (state)
     {
     case AUTOMATIC:
-        if (btn->isPressed())
+        btn->sync();
+        if (btn->isClicked())
         {
             state = MANUAL;
             lcd->setManual();
@@ -41,7 +42,9 @@ void ManageValveTask::tick()
         }
         break;
     case MANUAL:
-        if (btn->isPressed())
+        btn->sync();
+        pot->sync();
+        if (btn->isClicked())
         {
             state = AUTOMATIC;
             lcd->setAutomatic();

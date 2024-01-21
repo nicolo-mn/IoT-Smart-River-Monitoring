@@ -5,9 +5,11 @@ class Potentiometer {
 
 private:
   int pin;
+  float value;
  
 public: 
-  Potentiometer(int pin); 
+  Potentiometer(int pin);
+  void sync();
   float getPercentage();
 };
 

@@ -5,9 +5,35 @@ Button::Button(int pin)
 {
     this->pin = pin;
     pinMode(pin, INPUT);
+    pressed = false;
+    clicked = false;
 }
 
-bool Button::isPressed()
+void Button::sync()
 {
-    return digitalRead(pin) == HIGH;
+    bool wasPressed = pressed;
+    pressed = digitalRead(pin) == HIGH;
+    if (!pressed)
+    {
+        if (wasPressed)
+        {
+            clicked = true;
+        }
+        else
+        {
+            if (clicked)
+            {
+                clicked = false;
+            }
+        }
+    }
+    else if (pressed)
+    {
+        clicked = false;
+    }
+}
+
+bool Button::isClicked()
+{
+    return clicked;
 }

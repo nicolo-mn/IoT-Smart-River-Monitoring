@@ -5,6 +5,10 @@ Potentiometer::Potentiometer(int pin){
   this->pin = pin;
 } 
 
+void Potentiometer::sync(){
+  value = analogRead(pin);
+}
+
 float Potentiometer::getPercentage(){
-  return analogRead(pin) / 1023.0 * 100.0;
+  return value / 1023.0 * 100.0;
 }
