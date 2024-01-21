@@ -8,6 +8,8 @@ class LCD
 private:
     LiquidCrystal_I2C *displayLcd;
     int percentage;
+    bool isManualMode;
+    void updateDisplay();
 
 public:
     LCD();

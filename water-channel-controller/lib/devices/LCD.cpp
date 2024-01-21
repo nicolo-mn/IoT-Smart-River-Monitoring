@@ -12,6 +12,7 @@ LCD::LCD()
     displayLcd->backlight();
     displayLcd->noDisplay();
     percentage = 0;
+    isManualMode = false;
 }
 
 
@@ -30,16 +31,20 @@ void LCD::turnDisplayOff()
 
 void LCD::setAutomatic()
 {
-    setValveTo(percentage);
-    displayLcd->setCursor(0,SECOND_MSG_LINE);
-    displayLcd->print("Automatic mode");
+    if (!isManualMode) {
+        return;
+    }
+    isManualMode = false;
+    updateDisplay();
 }
 
 void LCD::setManual()
 {
-    setValveTo(percentage);
-    displayLcd->setCursor(0,SECOND_MSG_LINE);
-    displayLcd->print("Manual mode");
+    if (isManualMode) {
+        return;
+    }
+    isManualMode = true;
+    updateDisplay();
 }
 
 void LCD::setValveTo(int percentage)
@@ -47,8 +52,16 @@ void LCD::setValveTo(int percentage)
     if (this->percentage == percentage) {
         return;
     }
+    this->percentage = percentage;
+    updateDisplay();
+}
+
+void LCD::updateDisplay()
+{
     displayLcd->clear();
     displayLcd->setCursor(0, FIRST_MSG_LINE);
     displayLcd->print("Valve set to " + String(percentage) + "%");
-    this->percentage = percentage;
+    displayLcd->setCursor(0, SECOND_MSG_LINE);
+    String mode = isManualMode ? "Manual" : "Automatic";
+    displayLcd->print(mode + " mode");
 }
