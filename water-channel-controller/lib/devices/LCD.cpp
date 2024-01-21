@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "LCD.h"
 
 #define FIRST_MSG_LINE 1

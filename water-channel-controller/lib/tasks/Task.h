@@ -2,12 +2,8 @@
 #define __TASK__
 
 #include <Arduino.h>
-#include <FlagManager.h>
 class Task
 {
-protected:
-    FlagManager *flagManager;
-
 private:
     unsigned long taskPeriod;
     unsigned long timeElapsed;

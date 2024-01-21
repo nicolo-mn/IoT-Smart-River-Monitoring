@@ -23,14 +23,15 @@ void ManageValveTask::tick()
             state = MANUAL;
             lcd->setManual();
             Serial.println(MANUAL_MSG);
+            fflush(stdout);
         }
         else
         {
-            free(this->message);
-            this->message = new String("");
+            *this->message = "";
             if (Serial.available() > 0)
             {
                 message->concat(Serial.readStringUntil('\n'));
+                Serial.println("ricevuto" + *message);
                 if (this->message->indexOf(SET_VALVE_MSG) >= 0) {
                     int index = strlen(SET_VALVE_MSG);
                     String percentageString = this->message->substring(index);
@@ -49,6 +50,7 @@ void ManageValveTask::tick()
             state = AUTOMATIC;
             lcd->setAutomatic();
             Serial.println(AUTOMATIC_MSG);
+            fflush(stdout);
         }
         else
         {

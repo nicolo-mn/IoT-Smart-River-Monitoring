@@ -14,7 +14,6 @@
 #include <config.h>
 
 
-FlagManager *flagManager;
 LCD *displayLcd;
 Potentiometer *pot;
 Scheduler *sched;
@@ -49,4 +48,5 @@ void loop()
     // delay(1000);
     // displayLcd->setValveTo(0);
     // delay(1000);
+    // Serial.println("PROVA_PROVA_PROVA");
 }
