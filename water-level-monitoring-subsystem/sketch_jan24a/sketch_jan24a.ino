@@ -65,8 +65,8 @@ void callback(char* topic, byte* payload, unsigned int length) {
     deserializeJson(doc, payload, length);
     if (doc.containsKey("frequency")) {
         freq = doc["frequency"];
+	    Serial.println(String("Message arrived on [") + topic + "] freq: " + String(freq) );
     }
-	Serial.println(String("Message arrived on [") + topic + "] len: " + length );
 }
 
 void reconnect() {
@@ -160,16 +160,16 @@ void rilevationTaskCode( void * parameter ){
 		Serial.print(" cm ");
 		Serial.println(millis());
 
-        // DynamicJsonDocument doc(1024);  
-        // doc["distance"] = distance;
-        // String jsonMessage;
-        // serializeJson(doc, jsonMessage);
-        // client.publish(topic_send, jsonMessage.c_str());
         DynamicJsonDocument doc(1024);  
-        doc["frequency"] = freq + 1000;
+        doc["distance"] = distance;
         String jsonMessage;
         serializeJson(doc, jsonMessage);
-        client.publish(topic_receive, jsonMessage.c_str());
+        client.publish(topic_send, jsonMessage.c_str());
+        // DynamicJsonDocument doc(1024);  
+        // doc["frequency"] = freq + 1000;
+        // String jsonMessage;
+        // serializeJson(doc, jsonMessage);
+        // client.publish(topic_receive, jsonMessage.c_str());
 
 		delay(freq);
 	}
