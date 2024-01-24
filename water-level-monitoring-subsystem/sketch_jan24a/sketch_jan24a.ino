@@ -162,6 +162,7 @@ void rilevationTaskCode( void * parameter ){
 
         DynamicJsonDocument doc(1024);  
         doc["distance"] = distance;
+        doc["time"] = millis();
         String jsonMessage;
         serializeJson(doc, jsonMessage);
         client.publish(topic_send, jsonMessage.c_str());
