@@ -5,7 +5,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.json.JsonObject;
 
-class WebSocksServerVerticle extends AbstractVerticle {
+class WebSocketVerticle extends AbstractVerticle {
 
     private HttpServer server;
     private int i = 1;
