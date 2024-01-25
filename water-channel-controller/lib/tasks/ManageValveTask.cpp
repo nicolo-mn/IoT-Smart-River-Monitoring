@@ -1,5 +1,6 @@
 #include <ManageValveTask.h>
 #include <Arduino.h>
+#include <ArduinoJson.h>
 #include <config.h>
 
 ManageValveTask::ManageValveTask(Button *btn, Potentiometer *pot, ServoMotor *servo, LCD *lcd)
@@ -22,8 +23,15 @@ void ManageValveTask::tick()
         {
             state = MANUAL;
             lcd->setManual();
-            Serial.println(MANUAL_MSG);
-            fflush(stdout);
+
+            JsonDocument doc;
+            doc[TYPE] = MODE_TYPE;
+            doc[MODE] = AUTOMATIC_MSG;
+            String jsonMessage;
+            serializeJson(doc, jsonMessage);
+            Serial.println(jsonMessage);
+            // Serial.println(MANUAL_MSG);
+            // fflush(stdout);
         }
         else
         {
@@ -32,13 +40,24 @@ void ManageValveTask::tick()
                 *this->message = "";
                 message->concat(Serial.readStringUntil('\n'));
                 Serial.println("ricevuto" + *message);
-                if (this->message->indexOf(SET_VALVE_MSG) >= 0) {
-                    int index = strlen(SET_VALVE_MSG);
-                    String percentageString = this->message->substring(index);
-                    int perc = percentageString.toInt();
+
+                JsonDocument doc;
+                deserializeJson(doc, *message);
+
+                if (doc.containsKey(TYPE) && doc[TYPE] == SET_VALVE_TYPE && doc.containsKey(VALVE_OPENING))
+                {
+                    int perc = doc[VALVE_OPENING];
                     servo->setValveTo(perc);
                     lcd->setValveTo(perc);
                 }
+
+                // if (this->message->indexOf(SET_VALVE_MSG) >= 0) {
+                //     int index = strlen(SET_VALVE_MSG);
+                //     String percentageString = this->message->substring(index);
+                //     int perc = percentageString.toInt();
+                //     servo->setValveTo(perc);
+                //     lcd->setValveTo(perc);
+                // }
             }
         }
         break;
@@ -49,14 +68,29 @@ void ManageValveTask::tick()
         {
             state = AUTOMATIC;
             lcd->setAutomatic();
-            Serial.println(AUTOMATIC_MSG);
-            fflush(stdout);
+            JsonDocument doc;
+            doc[TYPE] = MODE_TYPE;
+            doc[MODE] = AUTOMATIC_MSG;
+            String jsonMessage;
+            serializeJson(doc, jsonMessage);
+            Serial.println(jsonMessage);
+            // Serial.println(AUTOMATIC_MSG);
+            // fflush(stdout);
         }
         else
         {
-            float perc = pot->getPercentage();
-            servo->setValveTo(perc);
-            lcd->setValveTo(perc);
+            if (pot->hasChanged()) {
+                int perc = pot->getPercentage();
+                servo->setValveTo(perc);
+                lcd->setValveTo(perc);
+
+                JsonDocument doc;
+                doc[TYPE] = SET_VALVE_TYPE;
+                doc[VALVE_OPENING] = perc;
+                String jsonMessage;
+                serializeJson(doc, jsonMessage);
+                Serial.println(jsonMessage);
+            }
         }
         break;
     default:

@@ -3,6 +3,8 @@ package rivermonitoringservice;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
@@ -96,7 +98,12 @@ public class SerialMonitor implements SerialPortEventListener {
 
     private void sendMessageToArduino() {
         try {
-            serialPort.writeString("ARDUINO_SET_VALVE_" + count + "\n");
+            // serialPort.writeString("ARDUINO_SET_VALVE_" + count + "\n");
+            JsonObject item = new JsonObject();
+            String type = "SET_VALVE_OPENING";
+            item.put("type", type);
+            item.put("valveOpening", count);
+            serialPort.writeString(item.encode() + "\n");
             count++;
         } catch (SerialPortException ex) {
             System.out.println("Error in sending string to COM-port: " + ex);
