@@ -53,12 +53,12 @@ class WebSocketVerticle extends AbstractVerticle {
                     String type = "VALVE_OPENING";
                     item.put("type", type);
                     int valveOpening = 25;
-                    item.put("opening", valveOpening);
+                    item.put("valveOpening", valveOpening);
                 } else if (action % 4 == 3) {
                     String type = "STATE";
                     item.put("type", type);
                     int valveOpening = 75;
-                    item.put("opening", valveOpening);
+                    item.put("valveOpening", valveOpening);
                     String state = "ALARM_TOO_LOW";
                     item.put("state", state);
                 }

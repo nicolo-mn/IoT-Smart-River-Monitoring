@@ -2,6 +2,7 @@
 const RILEVATION = 'RILEVATION';
 const MODE = 'MODE';
 const VALVE_OPENING = 'VALVE_OPENING';
+const SET_VALVE_OPENING = 'SET_VALVE_OPENING';
 const MANUAL_MODE = 'MANUAL';
 const AUTOMATIC_MODE = 'AUTOMATIC';
 const STATE = 'STATE';
@@ -47,6 +48,7 @@ function connectWebSocket() {
     document.getElementById("submitBtn").onclick = () => {
         const valveOpening = document.getElementById("valve-opening-input").value;
         exampleSocket.send(JSON.stringify({
+            type: SET_VALVE_OPENING,
             valveOpening: valveOpening
         }));
     };
@@ -87,7 +89,7 @@ function changeMode(jsonPacket) {
 
 function changeValveOpening(jsonPacket) {
     console.log("FUNZIONE CHANGE VALVE OPENING");
-    document.getElementById("valve-opening").innerHTML = jsonPacket.opening + "%";
+    document.getElementById("valve-opening").innerHTML = jsonPacket.valveOpening + "%";
 }
 
 function changeState(jsonPacket) {
