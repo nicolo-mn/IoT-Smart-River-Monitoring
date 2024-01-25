@@ -42,11 +42,18 @@ public class SerialReaderVerticle extends AbstractVerticle {
         } catch (SerialPortException ex) {
             ex.printStackTrace();
         }
+        String serialData = "CIAO";
+        vertx.eventBus().send("serial.to.logic", serialData);
+        log(serialData);
     }
 
     private void handleSerialData(String data) {
         // Implementa la logica per gestire i dati letti dalla seriale
         System.out.println("Dati dalla seriale: " + data);
+    }
+
+    private void log(String msg) {
+        System.out.println("[SERIAL] " + msg);
     }
 }
 

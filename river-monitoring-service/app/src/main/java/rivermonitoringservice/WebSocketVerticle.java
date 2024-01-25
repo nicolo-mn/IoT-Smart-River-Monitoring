@@ -13,7 +13,11 @@ class WebSocketVerticle extends AbstractVerticle {
 
     @Override
     public void start() {
-        startServer(vertx);
+        // startServer(vertx);
+        vertx.eventBus().consumer("logic.to.websocket", message -> {
+            String serialData = (String) message.body();
+            log(serialData);
+        });
     }
 
     private void startServer(Vertx vertx) {
@@ -69,6 +73,10 @@ class WebSocketVerticle extends AbstractVerticle {
                 });
             });
         }).listen(8080);
+    
+    }
 
+    private void log(String msg) {
+        System.out.println("[WEBSOCKET] " + msg);
     }
 }
