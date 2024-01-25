@@ -27,9 +27,9 @@ void ManageValveTask::tick()
         }
         else
         {
-            *this->message = "";
             if (Serial.available() > 0)
             {
+                *this->message = "";
                 message->concat(Serial.readStringUntil('\n'));
                 Serial.println("ricevuto" + *message);
                 if (this->message->indexOf(SET_VALVE_MSG) >= 0) {
