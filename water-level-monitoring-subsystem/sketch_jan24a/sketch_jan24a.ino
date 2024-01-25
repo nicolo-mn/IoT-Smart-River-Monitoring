@@ -61,7 +61,7 @@ void setup_wifi() {
 
 /* MQTT subscribing callback */
 void callback(char* topic, byte* payload, unsigned int length) {
-    DynamicJsonDocument doc(1024);
+    JsonDocument doc;
     deserializeJson(doc, payload, length);
     if (doc.containsKey("frequency")) {
         freq = doc["frequency"];
@@ -160,13 +160,13 @@ void rilevationTaskCode( void * parameter ){
 		Serial.print(" cm ");
 		Serial.println(millis());
 
-        DynamicJsonDocument doc(1024);  
+        JsonDocument doc;  
         doc["distance"] = distance;
         doc["time"] = millis();
         String jsonMessage;
         serializeJson(doc, jsonMessage);
         client.publish(topic_send, jsonMessage.c_str());
-        // DynamicJsonDocument doc(1024);  
+        // JsonDocument doc;  
         // doc["frequency"] = freq + 1000;
         // String jsonMessage;
         // serializeJson(doc, jsonMessage);
