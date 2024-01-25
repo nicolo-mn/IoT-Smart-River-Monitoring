@@ -13,13 +13,13 @@
             <canvas id="myLineChart"></canvas>
         </section>
         <p class="info-text">Current valve opening: <span id="valve-opening"></span></p>
-        <p class="info-text">Water level state: <span id="status"></span></p>
+        <p class="info-text">Water level state: <span id="state"></span></p>
         <section class="valveOptions">
-            <label for="slider">Set valve opening:</label>
-            <input type="range" id="slider" min="0" max="100" value="50">
+            <label for="valve-opening-input">Set valve opening:</label>
+            <input type="range" id="valve-opening-input" min="0" max="100" value="50">
             <button id="submitBtn">Set opening</button>
+            <p id="alert"></p>
         </section>
-        <p id="alert"></p>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
