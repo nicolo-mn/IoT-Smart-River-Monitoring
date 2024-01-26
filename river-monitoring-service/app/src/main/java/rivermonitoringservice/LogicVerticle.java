@@ -1,6 +1,7 @@
 package rivermonitoringservice;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 
 public class LogicVerticle extends AbstractVerticle {
@@ -8,6 +9,8 @@ public class LogicVerticle extends AbstractVerticle {
     private static final String TYPE = "type";
     private static final String MODE = "mode";
     private static final String MODE_TYPE = "MODE";
+    private static final String RILEVATION_TYPE = "RILEVATION";
+    private static final String DATA = "data";
     private static final String SET_VALVE_OPENING = "SET_VALVE_OPENING";
     private static final String VALVE_OPENING = "valveOpening";
     private static final String MANUAL_MSG = "MANUAL";
@@ -39,6 +42,15 @@ public class LogicVerticle extends AbstractVerticle {
                 vertx.eventBus().send("logic.to.websocket", serialData);
             }
             vertx.eventBus().send("logic.to.websocket", serialData);
+        });
+
+        vertx.eventBus().consumer("mqtt.to.logic", message -> {
+            String mqttData = (String) message.body();
+            JsonObject receivedObj = new JsonObject(mqttData);
+            JsonObject rilevation = new JsonObject();
+            rilevation.put(TYPE, RILEVATION_TYPE);
+            rilevation.put(DATA, receivedObj);
+            vertx.eventBus().send("logic.to.websocket", rilevation.encode());
         });
     }
 

@@ -7,6 +7,7 @@ const int greenLedPin = 6;
 const int redLedPin = 7;
 const int echoPin = 16;
 const int trigPin = 17;
+const int emptyDistance = 10;
 
 /* wifi network info */
 const char* ssid = "AndroidAP_5664";
@@ -33,7 +34,7 @@ enum {
 } checkState;
 
 // unsigned long lastMsgTime = 0;
-unsigned long freq = 1000;
+unsigned long freq = 12;
 // char msg[MSG_BUFFER_SIZE];
 int value = 0;
 
@@ -155,14 +156,15 @@ void rilevationTaskCode( void * parameter ){
 
 		duration = pulseIn(echoPin, HIGH);
 		distance = (duration / 2) / 29.1;  // Calculate distance in cm
+        double waterLevel = emptyDistance - distance;
 
 		Serial.print("Distanza: ");
-		Serial.print(distance);
+		Serial.print(waterLevel);
 		Serial.print(" cm ");
 		Serial.println(millis());
 
         JsonDocument doc;  
-        doc["distance"] = distance;
+        doc["waterLevel"] = waterLevel;
         doc["time"] = millis();
         String jsonMessage;
         serializeJson(doc, jsonMessage);
