@@ -144,7 +144,8 @@ void rilevationTaskCode( void * parameter ){
 	Serial.println(xPortGetCoreID());
 
 	for(;;){
-		long duration, distance;
+		long duration;
+        double distance;
 
 		digitalWrite(trigPin, LOW);
 		delayMicroseconds(2);
@@ -172,7 +173,7 @@ void rilevationTaskCode( void * parameter ){
         // serializeJson(doc, jsonMessage);
         // client.publish(topic_receive, jsonMessage.c_str());
 
-		delay(freq);
+		delay(60000 / freq);
 	}
 }
 
