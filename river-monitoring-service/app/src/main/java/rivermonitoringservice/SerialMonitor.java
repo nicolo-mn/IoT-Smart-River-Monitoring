@@ -3,7 +3,6 @@ package rivermonitoringservice;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;

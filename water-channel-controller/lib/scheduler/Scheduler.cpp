@@ -40,8 +40,9 @@ void Scheduler::schedule()
         }
     }
 
-    if (millis() - tstart > basePeriod) {
-        Serial.println("Scheduler Error: tasks takes too long!!!");
+    unsigned long telapsed = millis() - tstart;
+    if (telapsed > basePeriod) {
+        Serial.println("Scheduler Error: tasks takes too long!!! elapsed: " + String(telapsed));
     }
 
     sync();

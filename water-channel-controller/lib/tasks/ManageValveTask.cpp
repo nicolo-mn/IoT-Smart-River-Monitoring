@@ -39,7 +39,7 @@ void ManageValveTask::tick()
             {
                 *this->message = "";
                 message->concat(Serial.readStringUntil('\n'));
-                Serial.println("ricevuto" + *message);
+                // Serial.println("ricevuto" + *message);
 
                 JsonDocument doc;
                 deserializeJson(doc, *message);
