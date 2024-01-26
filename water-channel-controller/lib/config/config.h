@@ -13,6 +13,7 @@
 #define MODE "mode"
 #define TYPE "type"
 #define VALVE_OPENING "valveOpening"
-#define SET_VALVE_TYPE "SET_VALVE_OPENING"
+#define VALVE_OPENING_TYPE "VALVE_OPENING"
+#define SET_VALVE_OPENING_TYPE "SET_VALVE_OPENING"
 
 #endif

@@ -17,8 +17,14 @@ class WebSocketVerticle extends AbstractVerticle {
     public void start() {
         startServer(vertx);
         vertx.eventBus().consumer("logic.to.websocket", message -> {
-            String serialData = (String) message.body();
-            log(serialData);
+            String messageFromLogic = (String) message.body();
+            if (webSocket != null) {
+                // Use the existing WebSocket connection to send the message
+                webSocket.writeTextMessage(messageFromLogic);
+                log(messageFromLogic);
+            } else {
+                log("WebSocket connection not available.");
+            }
         });
     }
 
@@ -77,7 +83,6 @@ class WebSocketVerticle extends AbstractVerticle {
                 // });
             });
         }).listen(8080);
-        
     }
 
     private void log(String msg) {

@@ -29,7 +29,8 @@ public class SerialReaderVerticle extends AbstractVerticle {
                         try {
                             receivedData = receivedData.concat(serialPort.readString(event.getEventValue()));
                             if (receivedData.contains("\n")) {
-                                handleSerialData(receivedData.trim());
+                                vertx.eventBus().send("serial.to.logic", receivedData.trim());
+                                // handleSerialData(receivedData.trim());
                                 receivedData = "";
                             }
                         } catch (SerialPortException ex) {

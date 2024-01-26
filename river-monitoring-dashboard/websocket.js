@@ -7,7 +7,7 @@ const MANUAL_MODE = 'MANUAL';
 const AUTOMATIC_MODE = 'AUTOMATIC';
 const STATE = 'STATE';
 const N_MIN = 0.5;
-
+const DEFAULT_STATE = 'NORMAL';
 // const NORMAL_STATE = 'NORMAL';
 // const ALARM_TOO_LOW_STATE = 'ALARM_TOO_LOW';
 // const PRE_ALARM_TOO_HIGH_STATE = 'PRE_ALARM_TOO_HIGH';
@@ -57,6 +57,13 @@ function connectWebSocket() {
         console.error(`WebSocket closed with code ${event.code}. Reconnecting in ${retryDelay / 1000} seconds.`);
         setTimeout(connectWebSocket, retryDelay);
     };
+
+    exampleSocket.onopen = () => {
+        document.getElementById("valve-opening").innerHTML = "0%";
+        document.getElementById("state").innerHTML = DEFAULT_STATE;
+        document.getElementById("alert").innerHTML = "";
+        document.getElementById("submitBtn").disabled = false;
+    }
 }
 
 function addRilevationData(jsonPacket) {
@@ -89,7 +96,9 @@ function changeMode(jsonPacket) {
 
 function changeValveOpening(jsonPacket) {
     console.log("FUNZIONE CHANGE VALVE OPENING");
-    document.getElementById("valve-opening").innerHTML = jsonPacket.valveOpening + "%";
+    if ('valveOpening' in jsonPacket) {
+        document.getElementById("valve-opening").innerHTML = jsonPacket.valveOpening + "%";
+    }
 }
 
 function changeState(jsonPacket) {

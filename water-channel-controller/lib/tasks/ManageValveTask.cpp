@@ -26,7 +26,7 @@ void ManageValveTask::tick()
 
             JsonDocument doc;
             doc[TYPE] = MODE_TYPE;
-            doc[MODE] = AUTOMATIC_MSG;
+            doc[MODE] = MANUAL_MSG;
             String jsonMessage;
             serializeJson(doc, jsonMessage);
             Serial.println(jsonMessage);
@@ -44,7 +44,7 @@ void ManageValveTask::tick()
                 JsonDocument doc;
                 deserializeJson(doc, *message);
 
-                if (doc.containsKey(TYPE) && doc[TYPE] == SET_VALVE_TYPE && doc.containsKey(VALVE_OPENING))
+                if (doc.containsKey(TYPE) && doc[TYPE] == SET_VALVE_OPENING_TYPE && doc.containsKey(VALVE_OPENING))
                 {
                     int perc = doc[VALVE_OPENING];
                     servo->setValveTo(perc);
@@ -85,7 +85,7 @@ void ManageValveTask::tick()
                 lcd->setValveTo(perc);
 
                 JsonDocument doc;
-                doc[TYPE] = SET_VALVE_TYPE;
+                doc[TYPE] = VALVE_OPENING_TYPE;
                 doc[VALVE_OPENING] = perc;
                 String jsonMessage;
                 serializeJson(doc, jsonMessage);
