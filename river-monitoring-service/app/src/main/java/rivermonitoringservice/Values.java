@@ -6,13 +6,13 @@ package rivermonitoringservice;
 public class Values {
 
     // water levels (in cm)
-    private static final double WL1 = 2.0;
-    private static final double WL2 = 5.0;
-    private static final double WL3 = 7.0;
-    private static final double WL4 = 10.0;
+    private static final double WL1 = 5.0;
+    private static final double WL2 = 10.0;
+    private static final double WL3 = 15.0;
+    private static final double WL4 = 20.0;
     // frequencies (in rilevations/minute)
-    private static final int F1 = 6;
-    private static final int F2 = 12;
+    private static final int F1 = 30;
+    private static final int F2 = 60;
 
     public static double getWL1() {
         return WL1;

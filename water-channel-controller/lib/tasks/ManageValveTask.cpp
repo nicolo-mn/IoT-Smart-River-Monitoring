@@ -30,6 +30,7 @@ void ManageValveTask::tick()
             String jsonMessage;
             serializeJson(doc, jsonMessage);
             Serial.println(jsonMessage);
+            fflush(stdout);
             // Serial.println(MANUAL_MSG);
             // fflush(stdout);
         }
@@ -74,8 +75,8 @@ void ManageValveTask::tick()
             String jsonMessage;
             serializeJson(doc, jsonMessage);
             Serial.println(jsonMessage);
+            fflush(stdout);
             // Serial.println(AUTOMATIC_MSG);
-            // fflush(stdout);
         }
         else
         {
@@ -90,6 +91,7 @@ void ManageValveTask::tick()
                 String jsonMessage;
                 serializeJson(doc, jsonMessage);
                 Serial.println(jsonMessage);
+                fflush(stdout);
             }
         }
         break;

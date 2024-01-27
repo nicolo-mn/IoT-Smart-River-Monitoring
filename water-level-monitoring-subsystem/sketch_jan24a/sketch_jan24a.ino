@@ -7,7 +7,7 @@ const int greenLedPin = 6;
 const int redLedPin = 7;
 const int echoPin = 16;
 const int trigPin = 17;
-const int emptyDistance = 10;
+const int emptyDistance = 35;
 
 /* wifi network info */
 const char* ssid = "AndroidAP_5664";

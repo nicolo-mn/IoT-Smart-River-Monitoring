@@ -31,6 +31,7 @@ public class SerialReaderVerticle extends AbstractVerticle {
                             if (receivedData.contains("\n")) {
                                 vertx.eventBus().send("serial.to.logic", receivedData.trim());
                                 // handleSerialData(receivedData.trim());
+                                log("from Arduino: " + receivedData.trim());
                                 receivedData = "";
                             }
                         } catch (SerialPortException ex) {
@@ -48,7 +49,7 @@ public class SerialReaderVerticle extends AbstractVerticle {
         // log(serialData);
         vertx.eventBus().consumer("logic.to.serial", message -> {
             String serialData = (String) message.body();
-            log(serialData);
+            log("to Arduino: " + serialData);
             try {
                 serialPort.writeString(serialData + "\n");
             } catch (SerialPortException ex) {

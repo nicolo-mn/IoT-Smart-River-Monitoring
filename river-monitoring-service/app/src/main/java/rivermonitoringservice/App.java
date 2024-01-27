@@ -12,9 +12,7 @@ public class App {
         vertx.deployVerticle(new MQTTVerticle());
         vertx.deployVerticle(new WebSocketVerticle());
         vertx.deployVerticle(new LogicVerticle());
-        // vertx.deployVerticle(new SerialReaderVerticle());
-        // var conn = new SerialMonitor();
-        // conn.connectToArduino();
+        vertx.deployVerticle(new SerialReaderVerticle());
     }
     
     

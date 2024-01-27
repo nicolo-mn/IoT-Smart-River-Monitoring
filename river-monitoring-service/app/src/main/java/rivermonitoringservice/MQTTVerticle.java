@@ -49,7 +49,16 @@ public class MQTTVerticle extends AbstractVerticle {
                 //         false);
                 vertx.eventBus().send("mqtt.to.logic", s.payload().toString());
             }).subscribe(TOPIC_RECEIVE, 2);
-
+            vertx.eventBus().consumer("logic.to.mqtt", message -> {
+                String mqttData = (String) message.body();
+                if (client != null && client.isConnected()) {
+                    client.publish(TOPIC_SEND,
+                            Buffer.buffer(mqttData),
+                            MqttQoS.AT_LEAST_ONCE,
+                            false,
+                            false);
+                }
+            });
         });
     }
 

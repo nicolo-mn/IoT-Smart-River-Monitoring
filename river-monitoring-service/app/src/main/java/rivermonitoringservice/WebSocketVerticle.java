@@ -21,7 +21,7 @@ class WebSocketVerticle extends AbstractVerticle {
             if (webSocket != null) {
                 // Use the existing WebSocket connection to send the message
                 webSocket.writeTextMessage(messageFromLogic);
-                log(messageFromLogic);
+                // log(messageFromLogic);
             } else {
                 log("WebSocket connection not available.");
             }

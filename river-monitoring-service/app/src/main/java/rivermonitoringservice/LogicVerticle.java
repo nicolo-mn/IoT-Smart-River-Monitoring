@@ -14,9 +14,11 @@ public class LogicVerticle extends AbstractVerticle {
     private static final String SET_VALVE_OPENING = "SET_VALVE_OPENING";
     private static final String VALVE_OPENING = "valveOpening";
     private static final String MANUAL_MSG = "MANUAL";
-    private static final String AUTOMATIC_MSG = "AUTOMATIC";
+    private static final String FREQUENCY = "frequency";
+    private static final String STATE = "STATE";
 
     private boolean isManual = false;
+    private RiverState state = RiverState.NORMAL;
 
     public void start() {
         // Subscribe to messages from serial port (assuming String messages)
@@ -45,12 +47,41 @@ public class LogicVerticle extends AbstractVerticle {
         });
 
         vertx.eventBus().consumer("mqtt.to.logic", message -> {
+            // Send data to dashboard
             String mqttData = (String) message.body();
             JsonObject receivedObj = new JsonObject(mqttData);
             JsonObject rilevation = new JsonObject();
             rilevation.put(TYPE, RILEVATION_TYPE);
             rilevation.put(DATA, receivedObj);
             vertx.eventBus().send("logic.to.websocket", rilevation.encode());
+
+            // check if river state needs to be changed
+            double waterLevel = receivedObj.getDouble("waterLevel");
+            if (!this.state.isWaterLevelValid(waterLevel)) {
+                int prevFreq = this.state.getFrequency();
+                this.state = RiverState.fromWaterLevel(waterLevel);
+                log("New state: " + this.state.getName());
+                // check if frequency needs to be changed
+                if (prevFreq != this.state.getFrequency()) {
+                    JsonObject espFreq = new JsonObject();
+                    espFreq.put(FREQUENCY, this.state.getFrequency());
+                    vertx.eventBus().send("logic.to.mqtt", espFreq.encode());
+                }
+                // notify Arduino of the changes
+                if (!isManual) {
+                    JsonObject arduinoSetValve = new JsonObject();
+                    arduinoSetValve.put(TYPE, SET_VALVE_OPENING);
+                    arduinoSetValve.put(VALVE_OPENING, this.state.getValveOpening());
+                    vertx.eventBus().send("logic.to.serial", arduinoSetValve.encode());
+                }
+                // notify dashboard of the changes
+                JsonObject dashboardSetState = new JsonObject();
+                dashboardSetState.put(TYPE, STATE);
+                dashboardSetState.put("state", this.state.getName());
+                dashboardSetState.put(VALVE_OPENING, this.state.getValveOpening());
+                vertx.eventBus().send("logic.to.websocket", dashboardSetState.encode());
+            }
+
         });
     }
 
