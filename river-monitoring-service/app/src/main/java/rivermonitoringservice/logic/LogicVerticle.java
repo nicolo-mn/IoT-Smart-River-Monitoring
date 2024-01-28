@@ -1,4 +1,4 @@
-package rivermonitoringservice;
+package rivermonitoringservice.logic;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.Json;

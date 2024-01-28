@@ -1,17 +1,14 @@
-package rivermonitoringservice;
+package rivermonitoringservice.comm;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.ServerWebSocket;
-import io.vertx.core.json.JsonObject;
 
-class WebSocketVerticle extends AbstractVerticle {
+public class WebSocketVerticle extends AbstractVerticle {
 
     private HttpServer server;
     private ServerWebSocket webSocket;
-    private int i = 1;
-    private int action = 0;
 
     @Override
     public void start() {

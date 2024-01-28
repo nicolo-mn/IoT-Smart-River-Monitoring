@@ -1,4 +1,4 @@
-package rivermonitoringservice;
+package rivermonitoringservice.comm;
 import io.vertx.core.AbstractVerticle;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;

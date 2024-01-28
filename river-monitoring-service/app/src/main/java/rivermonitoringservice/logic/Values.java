@@ -1,4 +1,4 @@
-package rivermonitoringservice;
+package rivermonitoringservice.logic;
 
 /**
  * This class contains the values used by the application.

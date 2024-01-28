@@ -1,4 +1,4 @@
-package rivermonitoringservice;
+package rivermonitoringservice.comm;
 
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.AbstractVerticle;

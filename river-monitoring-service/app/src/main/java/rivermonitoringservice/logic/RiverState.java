@@ -1,4 +1,4 @@
-package rivermonitoringservice;
+package rivermonitoringservice.logic;
 
 import java.util.function.Predicate;
 
