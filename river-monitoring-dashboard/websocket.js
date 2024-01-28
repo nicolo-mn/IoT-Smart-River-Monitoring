@@ -53,8 +53,12 @@ function addRilevationData(jsonPacket) {
     const rilevation = jsonPacket.data;
     rilevation.time = Math.round(rilevation.time / 1000);
     console.log("FUNZIONE ADD RILEVATION DATA");
-    while (dataList.length > 0 && rilevation.time - dataList[0].time > N_MIN * 60 * 1000) {
+    while (dataList.length > 0 && rilevation.time - dataList[0].time > N_MIN * 60) {
         dataList.shift();
+    }
+    // In case ESP restarts
+    if (dataList.length > 0 && rilevation.time < dataList[dataList.length - 1].time) {
+        dataList = [];
     }
     dataList.push(rilevation);
     myLineChart.data.labels = dataList.map(item => item.time);

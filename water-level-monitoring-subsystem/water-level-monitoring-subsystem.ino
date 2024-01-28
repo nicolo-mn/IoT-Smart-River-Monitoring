@@ -31,7 +31,7 @@ enum {
     CHECK_WIFI,
     CHECK_MQTT
 } checkState;
-unsigned long freq = 12;
+unsigned long freq = 30;
 
 void setup_wifi() {
 
