@@ -7,14 +7,14 @@ public class LogicVerticle extends AbstractVerticle {
 
     private static final String TYPE = "type";
     private static final String MODE = "mode";
-    private static final String MODE_TYPE = "MODE";
+    private static final String MODE_TYPE = "CHANGE_MODE";
     private static final String RILEVATION_TYPE = "RILEVATION";
     private static final String DATA = "data";
-    private static final String SET_VALVE_OPENING = "SET_VALVE_OPENING";
+    private static final String SET_VALVE_AUTOMATIC = "SET_VALVE_AUTOMATIC";
     private static final String VALVE_OPENING = "valveOpening";
     private static final String MANUAL_MSG = "MANUAL";
     private static final String FREQUENCY = "frequency";
-    private static final String STATE = "STATE";
+    private static final String STATE = "CHANGE_STATE";
 
     private boolean isManual = false;
     private RiverState state = RiverState.NORMAL;
@@ -73,7 +73,7 @@ public class LogicVerticle extends AbstractVerticle {
                 // notify Arduino of the changes
                 if (!isManual) {
                     JsonObject arduinoSetValve = new JsonObject();
-                    arduinoSetValve.put(TYPE, SET_VALVE_OPENING);
+                    arduinoSetValve.put(TYPE, SET_VALVE_AUTOMATIC);
                     arduinoSetValve.put(VALVE_OPENING, this.state.getValveOpening());
                     vertx.eventBus().send("logic.to.serial", arduinoSetValve.encode());
                     dashboardSetState.put(VALVE_OPENING, this.state.getValveOpening());
