@@ -12,14 +12,6 @@ public class LogicVerticle extends AbstractVerticle {
     private RiverState state = RiverState.NORMAL;
 
     public void start() {
-        // Subscribe to messages from serial port (assuming String messages)
-        // vertx.eventBus().consumer("serial.to.logic", message -> {
-        //     String serialData = (String) message.body();
-        //     log(serialData);
-
-        //     // Send a message to LogicVerticle (assuming String message)
-        //     vertx.eventBus().send("logic.to.websocket", serialData);
-        // });
         vertx.eventBus().consumer("websocket.to.logic", message -> {
             String setOpeningData = (String) message.body();
             vertx.eventBus().publish("logic.to.serial", setOpeningData);
@@ -29,6 +21,7 @@ public class LogicVerticle extends AbstractVerticle {
             String serialData = (String) message.body();
             JsonObject receivedObj = new JsonObject(serialData);
             String type = receivedObj.getString(TYPE);
+            // check for mode changes
             if (type.equals("CHANGE_MODE")) {
                 String mode = receivedObj.getString("mode");
                 isManual = mode.equals("MANUAL");
@@ -38,7 +31,7 @@ public class LogicVerticle extends AbstractVerticle {
         });
 
         vertx.eventBus().consumer("mqtt.to.logic", message -> {
-            // Send data to dashboard
+            // send data to dashboard
             String mqttData = (String) message.body();
             JsonObject receivedObj = new JsonObject(mqttData);
             JsonObject rilevation = new JsonObject();
@@ -51,7 +44,6 @@ public class LogicVerticle extends AbstractVerticle {
             if (!this.state.isWaterLevelValid(waterLevel)) {
                 int prevFreq = this.state.getFrequency();
                 this.state = RiverState.fromWaterLevel(waterLevel);
-                log("New state: " + this.state.getName());
                 // check if frequency needs to be changed
                 if (prevFreq != this.state.getFrequency()) {
                     JsonObject espFreq = new JsonObject();
@@ -74,9 +66,5 @@ public class LogicVerticle extends AbstractVerticle {
             }
 
         });
-    }
-
-    private void log(String msg) {
-        System.out.println("[LOGIC] " + msg);
     }
 }

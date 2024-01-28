@@ -12,8 +12,7 @@ public class SerialReaderVerticle extends AbstractVerticle {
 
     @Override
     public void start() {
-        // Configura la tua porta seriale e registra un gestore di eventi
-        String serialPortName = "COM5"; // Sostituisci con il nome della tua porta seriale
+        String serialPortName = "COM5";
         int baudRate = 9600;
 
         serialPort = new SerialPort(serialPortName);
@@ -22,7 +21,6 @@ public class SerialReaderVerticle extends AbstractVerticle {
             serialPort.openPort();
             serialPort.setParams(baudRate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
-            // Registra un SerialPortEventListener per gestire gli eventi sulla porta seriale
             serialPort.addEventListener(new SerialPortEventListener() {
                 @Override
                 public void serialEvent(SerialPortEvent event) {
@@ -31,8 +29,6 @@ public class SerialReaderVerticle extends AbstractVerticle {
                             receivedData = receivedData.concat(serialPort.readString(event.getEventValue()));
                             if (receivedData.contains("\n")) {
                                 vertx.eventBus().send("serial.to.logic", receivedData.trim());
-                                // handleSerialData(receivedData.trim());
-                                log("from Arduino: " + receivedData.trim());
                                 receivedData = "";
                             }
                         } catch (SerialPortException ex) {
@@ -45,27 +41,19 @@ public class SerialReaderVerticle extends AbstractVerticle {
         } catch (SerialPortException ex) {
             log("There is an error on writing string to port т: " + ex);
         }
-        // String serialData = "CIAO";
-        // vertx.eventBus().send("serial.to.logic", serialData);
-        // log(serialData);
+
         vertx.eventBus().consumer("logic.to.serial", message -> {
             String serialData = (String) message.body();
-            log("to Arduino: " + serialData);
             try {
                 serialPort.writeString(serialData + "\n");
             } catch (SerialPortException ex) {
-                ex.printStackTrace();
+                log("Error in writing string to COM-port: " + ex);
             }
         });
 
+        // close serial port on shutdown
         Runtime.getRuntime().addShutdownHook(new Thread(() -> close()));
     }
-
-    // private void handleSerialData(String data) {
-    //     // Implementa la logica per gestire i dati letti dalla seriale
-    //     System.out.println("Dati dalla seriale: " + data);
-    // }
-
 
     public synchronized void close() {
         try {

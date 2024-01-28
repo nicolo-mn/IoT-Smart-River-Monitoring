@@ -41,6 +41,9 @@ public enum RiverState {
         return isWaterLevelInMyRange.test(waterLevel);
     }
 
+    /*
+     * This method returns the state of the river based on the water level.
+     */
     public static RiverState fromWaterLevel(double waterLevel) {
         for (RiverState state : RiverState.values()) {
             if (state.isWaterLevelValid(waterLevel)) {

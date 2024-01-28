@@ -13,8 +13,6 @@ private:
 
 public:
     LCD();
-    void turnDisplayOn();
-    void turnDisplayOff();
     void setAutomatic();
     void setManual();
     void setValveTo(int percentage);

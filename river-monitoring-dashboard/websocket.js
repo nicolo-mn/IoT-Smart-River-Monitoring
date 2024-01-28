@@ -1,23 +1,20 @@
 'use strict';
 const N_MIN = 5;
-const retryDelay = 5000;
 
 let webSocket;
 let dataList = [];
 let myLineChart;
 
+// Connects to the Java application through a WebSocket
 function connectWebSocket() {
-    console.log("FUNZIONE WEB SOCKET CONNECT");
     webSocket = new WebSocket("ws://localhost:8080");
     dataList = [];
     
     webSocket.onmessage = (event) => {
-        // Parse JSON data received from the server
         const jsonPacket = JSON.parse(event.data);
         const type = jsonPacket.type;
         if (type === 'RILEVATION') {
             addRilevationData(jsonPacket);
-            console.log(dataList);
         } else if (type === 'CHANGE_MODE') {
             changeMode(jsonPacket);
         } else if (type === 'SET_VALVE_MANUAL') {
@@ -37,8 +34,7 @@ function connectWebSocket() {
     };
 
     webSocket.onclose = (event) => {
-        console.error(`WebSocket closed with code ${event.code}. Reconnecting in ${retryDelay / 1000} seconds.`);
-        setTimeout(connectWebSocket, retryDelay);
+        connectWebSocket();
     };
 
     webSocket.onopen = () => {
@@ -49,10 +45,11 @@ function connectWebSocket() {
     }
 }
 
+// Adds a new rilevation to the graph
 function addRilevationData(jsonPacket) {
     const rilevation = jsonPacket.data;
     rilevation.time = Math.round(rilevation.time / 1000);
-    console.log("FUNZIONE ADD RILEVATION DATA");
+
     while (dataList.length > 0 && rilevation.time - dataList[0].time > N_MIN * 60) {
         dataList.shift();
     }
@@ -66,9 +63,9 @@ function addRilevationData(jsonPacket) {
     myLineChart.update();
 }
 
+// Changes the mode of the valve (manual or automatic)
 function changeMode(jsonPacket) {
     const mode = jsonPacket.mode;
-    console.log("FUNZIONE CHANGE MODE");
     if (mode === 'MANUAL') {
         document.getElementById("alert").innerHTML = "Manual mode on";
         document.getElementById("submitBtn").disabled = true;
@@ -78,21 +75,21 @@ function changeMode(jsonPacket) {
     }
 }
 
+// Changes the valve opening based on received data
 function changeValveOpening(jsonPacket) {
-    console.log("FUNZIONE CHANGE VALVE OPENING");
     if ('valveOpening' in jsonPacket) {
         document.getElementById("valve-opening").innerHTML = jsonPacket.valveOpening + "%";
     }
 }
 
+// Changes the state of the river
 function changeState(jsonPacket) {
-    console.log("FUNZIONE CHANGE STATE");
     document.getElementById("state").innerHTML = jsonPacket.state;
     changeValveOpening(jsonPacket);
 }
 
+// Graph initialization
 function graphInit() {
-    console.log("FUNZIONE GRAPH INIT");
     const canvas = document.getElementById('myLineChart');
     const ctx = canvas.getContext('2d');
     myLineChart = new Chart(ctx, {
@@ -129,9 +126,10 @@ function graphInit() {
     });
 }
 
-
+// Displays the value of the range input
 document.getElementById("valve-opening-input").addEventListener("input", function() {
     document.getElementById("input-value").innerHTML = this.value;
 });
+
 graphInit();
 connectWebSocket();

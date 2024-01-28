@@ -10,26 +10,12 @@ LCD::LCD()
 {
     displayLcd = new LiquidCrystal_I2C(0x27, 20, 4);
     displayLcd->init();
-    displayLcd->backlight();
-    // displayLcd->noDisplay();
-    percentage = 50;
-    isManualMode = false;
-    turnDisplayOn();
-    updateDisplay();
-}
-
-
-void LCD::turnDisplayOn()
-{
     displayLcd->display();
     displayLcd->backlight();
     displayLcd->clear();
-}
-
-void LCD::turnDisplayOff()
-{
-    displayLcd->noDisplay();
-    displayLcd->noBacklight();
+    percentage = 50;
+    isManualMode = false;
+    updateDisplay();
 }
 
 void LCD::setAutomatic()

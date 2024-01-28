@@ -17,85 +17,73 @@ void ManageValveTask::tick()
 {
     switch (state)
     {
-    case AUTOMATIC:
-        btn->sync();
-        if (btn->isClicked())
-        {
-            state = MANUAL;
-            lcd->setManual();
+        case AUTOMATIC:
+            btn->sync();
 
-            JsonDocument doc;
-            doc[TYPE] = CHANGE_MODE;
-            doc[MODE] = "MANUAL";
-            String jsonMessage;
-            serializeJson(doc, jsonMessage);
-            Serial.println(jsonMessage);
-            fflush(stdout);
-            // Serial.println(MANUAL_MSG);
-            // fflush(stdout);
-        }
-        else
-        {
-            if (Serial.available() > 0)
+            // Changes state to manual if button is clicked
+            if (btn->isClicked())
             {
-                *this->message = "";
-                message->concat(Serial.readStringUntil('\n'));
-                // Serial.println("ricevuto" + *message);
+                state = MANUAL;
+                lcd->setManual();
 
                 JsonDocument doc;
+                doc[TYPE] = CHANGE_MODE;
+                doc[MODE] = "MANUAL";
+                String jsonMessage;
+                serializeJson(doc, jsonMessage);
+                Serial.println(jsonMessage);
+                fflush(stdout);
+            }
+            else if (Serial.available() > 0)
+            {
+                // Read the incoming data
+                *this->message = "";
+                message->concat(Serial.readStringUntil('\n'));
+                JsonDocument doc;
                 deserializeJson(doc, *message);
-
                 if (doc.containsKey(TYPE) && doc[TYPE] == "SET_VALVE_AUTOMATIC" && doc.containsKey(VALVE_OPENING))
                 {
                     int perc = doc[VALVE_OPENING];
                     servo->setValveTo(perc);
                     lcd->setValveTo(perc);
                 }
-
-                // if (this->message->indexOf(SET_VALVE_MSG) >= 0) {
-                //     int index = strlen(SET_VALVE_MSG);
-                //     String percentageString = this->message->substring(index);
-                //     int perc = percentageString.toInt();
-                //     servo->setValveTo(perc);
-                //     lcd->setValveTo(perc);
-                // }
             }
-        }
-        break;
-    case MANUAL:
-        btn->sync();
-        pot->sync();
-        if (btn->isClicked())
-        {
-            state = AUTOMATIC;
-            lcd->setAutomatic();
-            JsonDocument doc;
-            doc[TYPE] = CHANGE_MODE;
-            doc[MODE] = "AUTOMATIC";
-            String jsonMessage;
-            serializeJson(doc, jsonMessage);
-            Serial.println(jsonMessage);
-            fflush(stdout);
-            // Serial.println(AUTOMATIC_MSG);
-        }
-        else
-        {
-            if (pot->hasChanged()) {
-                int perc = pot->getPercentage();
-                servo->setValveTo(perc);
-                lcd->setValveTo(perc);
-
+            break;
+        case MANUAL:
+            btn->sync();
+            pot->sync();
+            // Changes state to automatic if button is clicked
+            if (btn->isClicked())
+            {
+                state = AUTOMATIC;
+                lcd->setAutomatic();
                 JsonDocument doc;
-                doc[TYPE] = "SET_VALVE_MANUAL";
-                doc[VALVE_OPENING] = perc;
+                doc[TYPE] = CHANGE_MODE;
+                doc[MODE] = "AUTOMATIC";
                 String jsonMessage;
                 serializeJson(doc, jsonMessage);
                 Serial.println(jsonMessage);
                 fflush(stdout);
             }
-        }
-        break;
-    default:
-        break;
+            else
+            {
+                // Updates valve opening if potentiometer has changed
+                if (pot->hasChanged()) {
+                    int perc = pot->getPercentage();
+                    servo->setValveTo(perc);
+                    lcd->setValveTo(perc);
+
+                    JsonDocument doc;
+                    doc[TYPE] = "SET_VALVE_MANUAL";
+                    doc[VALVE_OPENING] = perc;
+                    String jsonMessage;
+                    serializeJson(doc, jsonMessage);
+                    Serial.println(jsonMessage);
+                    fflush(stdout);
+                }
+            }
+            break;
+        default:
+            break;
     }
 }
