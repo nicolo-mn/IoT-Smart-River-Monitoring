@@ -6,15 +6,7 @@ import io.vertx.core.json.JsonObject;
 public class LogicVerticle extends AbstractVerticle {
 
     private static final String TYPE = "type";
-    private static final String MODE = "mode";
-    private static final String MODE_TYPE = "CHANGE_MODE";
-    private static final String RILEVATION_TYPE = "RILEVATION";
-    private static final String DATA = "data";
-    private static final String SET_VALVE_AUTOMATIC = "SET_VALVE_AUTOMATIC";
     private static final String VALVE_OPENING = "valveOpening";
-    private static final String MANUAL_MSG = "MANUAL";
-    private static final String FREQUENCY = "frequency";
-    private static final String STATE = "CHANGE_STATE";
 
     private boolean isManual = false;
     private RiverState state = RiverState.NORMAL;
@@ -37,9 +29,9 @@ public class LogicVerticle extends AbstractVerticle {
             String serialData = (String) message.body();
             JsonObject receivedObj = new JsonObject(serialData);
             String type = receivedObj.getString(TYPE);
-            if (type.equals(MODE_TYPE)) {
-                String mode = receivedObj.getString(MODE);
-                isManual = mode.equals(MANUAL_MSG);
+            if (type.equals("CHANGE_MODE")) {
+                String mode = receivedObj.getString("mode");
+                isManual = mode.equals("MANUAL");
                 vertx.eventBus().send("logic.to.websocket", serialData);
             }
             vertx.eventBus().send("logic.to.websocket", serialData);
@@ -50,8 +42,8 @@ public class LogicVerticle extends AbstractVerticle {
             String mqttData = (String) message.body();
             JsonObject receivedObj = new JsonObject(mqttData);
             JsonObject rilevation = new JsonObject();
-            rilevation.put(TYPE, RILEVATION_TYPE);
-            rilevation.put(DATA, receivedObj);
+            rilevation.put(TYPE, "RILEVATION");
+            rilevation.put("data", receivedObj);
             vertx.eventBus().send("logic.to.websocket", rilevation.encode());
 
             // check if river state needs to be changed
@@ -63,17 +55,17 @@ public class LogicVerticle extends AbstractVerticle {
                 // check if frequency needs to be changed
                 if (prevFreq != this.state.getFrequency()) {
                     JsonObject espFreq = new JsonObject();
-                    espFreq.put(FREQUENCY, this.state.getFrequency());
+                    espFreq.put("frequency", this.state.getFrequency());
                     vertx.eventBus().send("logic.to.mqtt", espFreq.encode());
                 }
                 // notify dashboard of the changes
                 JsonObject dashboardSetState = new JsonObject();
-                dashboardSetState.put(TYPE, STATE);
+                dashboardSetState.put(TYPE, "CHANGE_STATE");
                 dashboardSetState.put("state", this.state.getName());
                 // notify Arduino of the changes
                 if (!isManual) {
                     JsonObject arduinoSetValve = new JsonObject();
-                    arduinoSetValve.put(TYPE, SET_VALVE_AUTOMATIC);
+                    arduinoSetValve.put(TYPE, "SET_VALVE_AUTOMATIC");
                     arduinoSetValve.put(VALVE_OPENING, this.state.getValveOpening());
                     vertx.eventBus().send("logic.to.serial", arduinoSetValve.encode());
                     dashboardSetState.put(VALVE_OPENING, this.state.getValveOpening());

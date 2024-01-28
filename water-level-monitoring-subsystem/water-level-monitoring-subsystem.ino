@@ -1,7 +1,6 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
-// #define MSG_BUFFER_SIZE 200
 
 const int greenLedPin = 6;
 const int redLedPin = 7;
@@ -32,12 +31,7 @@ enum {
     CHECK_WIFI,
     CHECK_MQTT
 } checkState;
-
-// unsigned long lastMsgTime = 0;
 unsigned long freq = 12;
-// char msg[MSG_BUFFER_SIZE];
-int value = 0;
-
 
 void setup_wifi() {
 
@@ -71,7 +65,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void reconnect() {
-	
 	// Loop until we're reconnected
 	while (!client.connected()) {
 		Serial.println("Attempting MQTT connection...");
@@ -82,9 +75,6 @@ void reconnect() {
 		// Attempt to connect
 		if (client.connect(clientId.c_str())) {
 			Serial.println("connected");
-			// Once connected, publish an announcement...
-			// client.publish("outTopic", "hello world");
-			// ... and resubscribe
 			client.subscribe(topic_receive);
 		} else {
 			Serial.print("failed, rc=");
@@ -169,12 +159,6 @@ void rilevationTaskCode( void * parameter ){
         String jsonMessage;
         serializeJson(doc, jsonMessage);
         client.publish(topic_send, jsonMessage.c_str());
-        // JsonDocument doc;  
-        // doc["frequency"] = freq + 1000;
-        // String jsonMessage;
-        // serializeJson(doc, jsonMessage);
-        // client.publish(topic_receive, jsonMessage.c_str());
-
 		delay(60000 / freq);
 	}
 }
@@ -184,34 +168,12 @@ void setup() {
 	pinMode(redLedPin, OUTPUT);
 	pinMode(trigPin, OUTPUT);
 	pinMode(echoPin, INPUT);
-
 	Serial.begin(115200);
-
 	xTaskCreatePinnedToCore(checkConnectionTaskCode,"Task1",10000,NULL,1,&checkConnectionTask,0);                         
 	xTaskCreatePinnedToCore(rilevationTaskCode,"Task2",10000,NULL,1,&rilevationTask,1);          
 }
 
-
-
 void loop() {
     delay(UINT_MAX);
-	// if (!client.connected()) {
-	// 	reconnect();
-	// }
-	// client.loop();
-
-	// unsigned long now = millis();
-	// if (now - lastMsgTime > 10000) {
-	//   lastMsgTime = now;
-	//   value++;
-
-	//   /* creating a msg in the buffer */
-	//   snprintf (msg, MSG_BUFFER_SIZE, "hello world #%ld", value);
-
-	//   Serial.println(String("Publishing message: ") + msg);
-		
-	//   /* publishing the msg */
-	//   client.publish(topic, msg);  
-	// }
 }
 
