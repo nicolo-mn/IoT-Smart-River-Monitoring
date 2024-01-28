@@ -36,6 +36,6 @@ public class MQTTVerticle extends AbstractVerticle {
     }
 
     private void log(String msg) {
-        System.out.println("[MQTT AGENT] " + msg);
+        System.out.println("[MQTT] " + msg);
     }
 }
