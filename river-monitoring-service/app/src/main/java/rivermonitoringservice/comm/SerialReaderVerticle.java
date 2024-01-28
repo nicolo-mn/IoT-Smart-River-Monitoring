@@ -8,6 +8,7 @@ import jssc.SerialPortException;
 public class SerialReaderVerticle extends AbstractVerticle {
     
     private String receivedData = "";
+    private SerialPort serialPort;
 
     @Override
     public void start() {
@@ -15,7 +16,7 @@ public class SerialReaderVerticle extends AbstractVerticle {
         String serialPortName = "COM5"; // Sostituisci con il nome della tua porta seriale
         int baudRate = 9600;
 
-        SerialPort serialPort = new SerialPort(serialPortName);
+        serialPort = new SerialPort(serialPortName);
 
         try {
             serialPort.openPort();
@@ -35,14 +36,14 @@ public class SerialReaderVerticle extends AbstractVerticle {
                                 receivedData = "";
                             }
                         } catch (SerialPortException ex) {
-                            ex.printStackTrace();
+                            log("Error in receiving string from COM-port: " + ex);
                         }
                     }
                 }
             }, SerialPort.MASK_RXCHAR);
 
         } catch (SerialPortException ex) {
-            ex.printStackTrace();
+            log("There is an error on writing string to port т: " + ex);
         }
         // String serialData = "CIAO";
         // vertx.eventBus().send("serial.to.logic", serialData);
@@ -57,11 +58,24 @@ public class SerialReaderVerticle extends AbstractVerticle {
             }
         });
 
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> close()));
     }
 
-    private void handleSerialData(String data) {
-        // Implementa la logica per gestire i dati letti dalla seriale
-        System.out.println("Dati dalla seriale: " + data);
+    // private void handleSerialData(String data) {
+    //     // Implementa la logica per gestire i dati letti dalla seriale
+    //     System.out.println("Dati dalla seriale: " + data);
+    // }
+
+
+    public synchronized void close() {
+        try {
+            if (serialPort != null) {
+                serialPort.removeEventListener();
+                serialPort.closePort();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void log(String msg) {

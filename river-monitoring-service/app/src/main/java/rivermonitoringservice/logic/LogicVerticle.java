@@ -1,7 +1,6 @@
 package rivermonitoringservice.logic;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 
 public class LogicVerticle extends AbstractVerticle {
@@ -67,18 +66,18 @@ public class LogicVerticle extends AbstractVerticle {
                     espFreq.put(FREQUENCY, this.state.getFrequency());
                     vertx.eventBus().send("logic.to.mqtt", espFreq.encode());
                 }
+                // notify dashboard of the changes
+                JsonObject dashboardSetState = new JsonObject();
+                dashboardSetState.put(TYPE, STATE);
+                dashboardSetState.put("state", this.state.getName());
                 // notify Arduino of the changes
                 if (!isManual) {
                     JsonObject arduinoSetValve = new JsonObject();
                     arduinoSetValve.put(TYPE, SET_VALVE_OPENING);
                     arduinoSetValve.put(VALVE_OPENING, this.state.getValveOpening());
                     vertx.eventBus().send("logic.to.serial", arduinoSetValve.encode());
+                    dashboardSetState.put(VALVE_OPENING, this.state.getValveOpening());
                 }
-                // notify dashboard of the changes
-                JsonObject dashboardSetState = new JsonObject();
-                dashboardSetState.put(TYPE, STATE);
-                dashboardSetState.put("state", this.state.getName());
-                dashboardSetState.put(VALVE_OPENING, this.state.getValveOpening());
                 vertx.eventBus().send("logic.to.websocket", dashboardSetState.encode());
             }
 

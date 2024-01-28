@@ -2,16 +2,13 @@ package rivermonitoringservice.comm;
 
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Verticle;
 import io.vertx.mqtt.MqttClient;
 import io.vertx.core.buffer.Buffer;
-import io.vertx.core.json.JsonObject;
 
 public class MQTTVerticle extends AbstractVerticle {
     private static final String BROKER_ADDRESS = "broker.mqtt-dashboard.com";
     private static final String TOPIC_SEND = "smart-river-monitoring-to-esp-19191";
     private static final String TOPIC_RECEIVE = "smart-river-monitoring-from-esp-19191";
-    private long frequency = 1000;
 
     @Override
     public void start() {

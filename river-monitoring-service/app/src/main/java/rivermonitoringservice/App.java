@@ -12,9 +12,9 @@ import rivermonitoringservice.logic.LogicVerticle;
 public class App {
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
-        vertx.deployVerticle(new MQTTVerticle());
         vertx.deployVerticle(new WebSocketVerticle());
-        vertx.deployVerticle(new LogicVerticle());
+        vertx.deployVerticle(new MQTTVerticle());
         vertx.deployVerticle(new SerialReaderVerticle());
+        vertx.deployVerticle(new LogicVerticle());
     }
 }
