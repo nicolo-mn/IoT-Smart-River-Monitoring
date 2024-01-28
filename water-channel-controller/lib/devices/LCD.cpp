@@ -12,7 +12,7 @@ LCD::LCD()
     displayLcd->init();
     displayLcd->backlight();
     // displayLcd->noDisplay();
-    percentage = 0;
+    percentage = 50;
     isManualMode = false;
     turnDisplayOn();
     updateDisplay();
