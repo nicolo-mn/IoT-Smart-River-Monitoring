@@ -1,23 +1,8 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
-
-const int greenLedPin = 6;
-const int redLedPin = 7;
-const int echoPin = 16;
-const int trigPin = 17;
-const int emptyDistance = 35;
-
-/* wifi network info */
-const char *ssid = "AndroidAP_5664";
-const char *password = "ciaociao";
-
-/* MQTT server address */
-const char *mqtt_server = "broker.mqtt-dashboard.com";
-
-/* MQTT topic */
-const char *topic_receive = "smart-river-monitoring-to-esp-19191";
-const char *topic_send = "smart-river-monitoring-from-esp-19191";
+#include "config.h"
+#include "Sonar.h"
 
 /* MQTT client management */
 WiFiClient espClient;
@@ -39,13 +24,13 @@ void setup_wifi()
 
     delay(10);
 
-    Serial.println(String("Connecting to ") + ssid);
+    Serial.println(String("Connecting to ") + SSID);
 
     while (WiFi.status() != WL_CONNECTED)
     {
         WiFi.mode(WIFI_STA);
         WiFi.disconnect();
-        WiFi.begin(ssid, password);
+        WiFi.begin(SSID, PASSWORD);
         delay(500);
         Serial.print(".");
     }
@@ -81,7 +66,7 @@ void reconnect()
         if (client.connect(clientId.c_str()))
         {
             Serial.println("connected");
-            client.subscribe(topic_receive);
+            client.subscribe(TOPIC_RECEIVE);
         }
         else
         {
@@ -97,13 +82,13 @@ void reconnect()
 // Checks if the connection is still alive, modifies leds accordingly
 void checkConnectionTaskCode(void *parameter)
 {
-    digitalWrite(redLedPin, HIGH);
+    digitalWrite(RED_LED_PIN, HIGH);
     setup_wifi();
     randomSeed(micros());
-    client.setServer(mqtt_server, 1883);
+    client.setServer(MQTT_SERVER, 1883);
     client.setCallback(callback);
-    digitalWrite(greenLedPin, HIGH);
-    digitalWrite(redLedPin, LOW);
+    digitalWrite(GREEN_LED_PIN, HIGH);
+    digitalWrite(RED_LED_PIN, LOW);
 
     for (;;)
     {
@@ -117,8 +102,8 @@ void checkConnectionTaskCode(void *parameter)
             }
             else
             {
-                digitalWrite(greenLedPin, LOW);
-                digitalWrite(redLedPin, HIGH);
+                digitalWrite(GREEN_LED_PIN, LOW);
+                digitalWrite(RED_LED_PIN, HIGH);
                 checkState = CHECK_WIFI;
             }
             break;
@@ -134,8 +119,8 @@ void checkConnectionTaskCode(void *parameter)
             {
                 reconnect();
             }
-            digitalWrite(greenLedPin, HIGH);
-            digitalWrite(redLedPin, LOW);
+            digitalWrite(GREEN_LED_PIN, HIGH);
+            digitalWrite(RED_LED_PIN, LOW);
             checkState = WORKING;
             break;
         default:
@@ -147,16 +132,17 @@ void checkConnectionTaskCode(void *parameter)
 // Sends data to the main Java application
 void rilevationTaskCode(void *parameter)
 {
+    Sonar sonar(ECHO_PIN, TRIG_PIN, 10000);
     for (;;)
     {
-        digitalWrite(trigPin, LOW);
-        delayMicroseconds(2);
-        digitalWrite(trigPin, HIGH);
-        delayMicroseconds(10);
-        digitalWrite(trigPin, LOW);
-        long duration = pulseIn(echoPin, HIGH);
-        double distance = (duration / 2) / 29.1; // Calculate distance in cm
-        double waterLevel = emptyDistance - distance;
+        // digitalWrite(TRIG_PIN, LOW);
+        // delayMicroseconds(2);
+        // digitalWrite(TRIG_PIN, HIGH);
+        // delayMicroseconds(10);
+        // digitalWrite(TRIG_PIN, LOW);
+        // long duration = pulseIn(ECHO_PIN, HIGH);
+        // double distance = (duration / 2) / 29.1; // Calculate distance in cm
+        float waterLevel = sonar.getDistance();
 
         if (waterLevel < 0)
         {
@@ -173,17 +159,17 @@ void rilevationTaskCode(void *parameter)
         doc["time"] = millis();
         String jsonMessage;
         serializeJson(doc, jsonMessage);
-        client.publish(topic_send, jsonMessage.c_str());
+        client.publish(TOPIC_SEND, jsonMessage.c_str());
         delay(60000 / freq);
     }
 }
 
 void setup()
 {
-    pinMode(greenLedPin, OUTPUT);
-    pinMode(redLedPin, OUTPUT);
-    pinMode(trigPin, OUTPUT);
-    pinMode(echoPin, INPUT);
+    pinMode(GREEN_LED_PIN, OUTPUT);
+    pinMode(RED_LED_PIN, OUTPUT);
+    pinMode(TRIG_PIN, OUTPUT);
+    pinMode(ECHO_PIN, INPUT);
     Serial.begin(115200);
     xTaskCreatePinnedToCore(checkConnectionTaskCode, "Task1", 10000, NULL, 1, &checkConnectionTask, 0);
     xTaskCreatePinnedToCore(rilevationTaskCode, "Task2", 10000, NULL, 1, &rilevationTask, 1);
