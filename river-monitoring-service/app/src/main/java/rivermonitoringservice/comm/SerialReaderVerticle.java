@@ -62,7 +62,7 @@ public class SerialReaderVerticle extends AbstractVerticle {
                 serialPort.closePort();
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log("Error in closing to COM-port: " + ex);
         }
     }
 
