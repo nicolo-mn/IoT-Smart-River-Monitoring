@@ -55,7 +55,7 @@ public class SerialReaderVerticle extends AbstractVerticle {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> close()));
     }
 
-    public synchronized void close() {
+    private synchronized void close() {
         try {
             if (serialPort != null) {
                 serialPort.removeEventListener();
