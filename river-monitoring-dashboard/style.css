@@ -55,11 +55,9 @@ h1 {
     align-items: center;
     width: 50vw;
     height: 50vh;
-    margin-bottom: 1rem;
 }
 
 .valveOptions {
-    margin-top: 1rem;
     width: 100%;
     display: flex;
     justify-content: left;

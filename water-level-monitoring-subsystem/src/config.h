@@ -5,7 +5,7 @@
 #define RED_LED_PIN 7
 #define ECHO_PIN 16
 #define TRIG_PIN 17
-#define EMPTY_DISTANCE 35
+#define EMPTY_DISTANCE 87
 
 /* wifi network info */
 #define SSID "AndroidAP_5664"

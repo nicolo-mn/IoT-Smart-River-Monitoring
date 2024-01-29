@@ -1,5 +1,5 @@
-#include "Sonar.h"
 #include <Arduino.h>
+#include "Sonar.h"
 
 Sonar::Sonar(int echoP, int trigP, long maxTime) : echoPin(echoP), trigPin(trigP), timeOut(maxTime){
   pinMode(trigPin, OUTPUT);
