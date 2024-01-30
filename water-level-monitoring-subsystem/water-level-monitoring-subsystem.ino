@@ -141,4 +141,6 @@ void setup() {
     xTaskCreatePinnedToCore(rilevationTaskCode, "Task2", 10000, NULL, 1, &rilevationTask, 1);
 }
 
-void loop() { delay(UINT_MAX); }
+void loop() {
+    delay(UINT_MAX);
+}
