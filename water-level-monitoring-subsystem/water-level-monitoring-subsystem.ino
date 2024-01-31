@@ -74,6 +74,7 @@ void checkConnectionTaskCode(void *parameter) {
     client.setCallback(callback);
     digitalWrite(GREEN_LED_PIN, HIGH);
     digitalWrite(RED_LED_PIN, LOW);
+    checkState = WORKING;
 
     for (;;) {
         switch (checkState) {
